@@ -3,13 +3,13 @@
 
 import ballerina/http;
 
-@http:ServiceConfig {basePath: "/t/carbon.super/api/server/v1"}
+@http:ServiceConfig {basePath: "/DinukaBimsaraBodaragama/user-sahred-access-API-4/1.0.0"}
 type OASServiceType service object {
     *http:ServiceContract;
     resource function post users/share(@http:Payload users_share_body payload) returns ProcessSuccessResponseAccepted|ErrorBadRequest|ErrorInternalServerError;
     resource function post users/unshare(@http:Payload users_unshare_body payload) returns ProcessSuccessResponseAccepted|ErrorBadRequest|ErrorInternalServerError;
-    resource function get users/[string userId]/shared\-organizations(string? after, string? before, int? 'limit) returns UserSharedOrganizationsResponse|ErrorBadRequest|ErrorInternalServerError;
-    resource function get users/[string userId]/shared\-roles(string orgId, string? after, string? before, int? 'limit) returns UserSharedRolesResponse|ErrorBadRequest|ErrorInternalServerError;
+    resource function get users/[string userId]/shared\-organizations(string? after, string? before, int? 'limit, string? filter, boolean recursive = false) returns UserSharedOrganizationsResponse|ErrorBadRequest|ErrorInternalServerError;
+    resource function get users/[string userId]/shared\-roles(string orgId, string? after, string? before, int? 'limit, string? filter, boolean? recursive) returns UserSharedRolesResponse|ErrorBadRequest|ErrorInternalServerError;
 };
 
 # Represents a user role within a specific audience (organization or application), defined by its display name and audience type.
@@ -53,8 +53,8 @@ public type Error record {
     string message;
     # An error description.
     string description?;
-    # A trace ID to help with debugging.
-    string traceId?;
+    # A trace ID in UUID format to help with debugging.
+    string traceId;
 };
 
 public type ErrorBadRequest record {|

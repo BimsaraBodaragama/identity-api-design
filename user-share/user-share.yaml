@@ -12,6 +12,9 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/DinukaBimsaraBodaragama/user-sahred-access-API-4/1.0.0
   - url: 'https://{server-url}/t/{tenant-domain}/api/server/v1'
     variables:
       tenant-domain:
@@ -156,8 +159,8 @@ paths:
         - User Accessible Organizations
       summary: Get organizations a user has access to
       description: |
-        This API retrieves the list of organizations where the specified user has shared access, with support for pagination.
-        
+        This API retrieves the list of organizations where the specified user has shared access, with support for pagination and filtering.
+
         <b>Permission required:</b> `internal_user_shared_access_view`
       parameters:
         - in: path
@@ -181,6 +184,17 @@ paths:
           schema:
             type: integer
           description: The maximum number of results to return per page.
+        - in: query
+          name: filter
+          schema:
+            type: string
+          description: A filter to apply to the results, such as by organization name or other criteria.
+        - in: query
+          name: recursive
+          schema:
+            type: boolean
+            default: false
+          description: Whether to retrieve organizations recursively, including child organizations.
       responses:
         '200':
           description: Successful Response with Accessible Organizations
@@ -206,9 +220,9 @@ paths:
       tags:
         - User Accessible Roles
       summary: Get roles assigned to a user in an organization
-      description: | 
-        This API fetches the roles assigned to the specified user within a particular organization with support for pagination.
-        
+      description: |
+        This API fetches the roles assigned to the specified user within a particular organization, with support for pagination, filtering, and recursion.
+
         <b>Permission required:</b> `internal_user_shared_access_view`
       parameters:
         - in: path
@@ -238,6 +252,16 @@ paths:
           schema:
             type: integer
           description: The maximum number of results to return per page.
+        - in: query
+          name: filter
+          schema:
+            type: string
+          description: Filter to apply when retrieving the roles.
+        - in: query
+          name: recursive
+          schema:
+            type: boolean
+          description: Set to true to retrieve roles recursively.
       responses:
         '200':
           description: Successful Response with Accessible Roles
@@ -506,6 +530,7 @@ components:
       required:
         - code
         - message
+        - traceId
       properties:
         code:
           type: string
@@ -521,5 +546,6 @@ components:
           description: An error description.
         traceId:
           type: string
-          example: "e0fbcfeb"
-          description: A trace ID to help with debugging.
+          format: uuid
+          example: "e0fbcfeb-7fc2-4b62-8b82-72d3c5fbcdeb"
+          description: A trace ID in UUID format to help with debugging.
